@@ -1,0 +1,17 @@
+
+* maybe separate the state (angle, x, y) from the instructions (move, turn)
+** instructions would take a turtle or bale, a source for units, and a strategy?
+** or maybe the turtle or bale would hold the strategy for responding to move, turn
+** or maybe the structure is more flat?  moveTogether vs moveEach.
+** I LIKE THE FUNCTIONAL ABSTRACTION THIS WAY
+   - turtle can be just {angle, x, y} -- and penColor, lineWeight, or other state
+   - maybe the functions can change only one state element (in which case move needs {xy:[x, y]})
+   - or move is the only special case... it needs to know the angle and the previous position
+   - or turn must set dx=cos(angle), dy=sin(angle) on the state
+
+* how should turtles be named?
+** the main trick is naming bales
+** move(turtle, source)
+   var new = $.extend(true, {}, turtle);
+   var strategy = turtle.strategy();
+   strategy.move(new, source.angle(), source.scalar());
