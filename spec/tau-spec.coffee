@@ -1,5 +1,5 @@
-Tau = require('../tau.coffee').Tau
-
+jQuery = require('jquery')
+Tau = require('../tau.coffee').create(jQuery, @)
 describe 'Tau', ->
 
   describe 'smoke tests', ->

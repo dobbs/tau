@@ -1,7 +1,5 @@
-do
-  ->
-    @$ = require('jquery').create()
-    @TAU = 2*Math.PI
+@create = ($, global) ->
+  global.TAU = 2*Math.PI
 
   turn = (turtle, source) ->
     angle = turtle.angle + source.angle
