@@ -36,6 +36,17 @@ describe 'Tau', ->
         angle: 0
       source =
         angle: TAU/5
-      result = Tau.turn(turtle, source)
-      expect(result).toEqual({whatever: 'unchanged', angle: TAU/5})
+      expect(Tau.turn(turtle, source)).toEqual({whatever: 'unchanged', angle: TAU/5})
         
+  describe 'move', ->
+    it 'somethings', ->
+      turtle =
+        x: 0
+        y: 0
+        angle: @smallest_angle_of_3_4_5_right_triangle
+      source =
+        distance: 50
+      result = Tau.move(turtle, source)
+      expect(result.x).toRoundTo(40)
+      expect(result.y).toRoundTo(30)
+      expect(result.angle).toEqual(@smallest_angle_of_3_4_5_right_triangle)
