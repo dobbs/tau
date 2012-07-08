@@ -8,6 +8,18 @@ describe 'Tau', ->
     it 'defines TAU as 2PI', ->
       expect(TAU).toEqual(2*Math.PI)
 
+  describe 'internals', ->
+    describe '_modTau', ->
+      it 'calculates angle % TAU where result is always a positive fraction of TAU', ->
+        expect(Tau._modTau(given)).toRoundTo(expected,7) for [given, expected] in [
+          [TAU/4, TAU/4]
+          [5*TAU/4, TAU/4]
+          [41*TAU/4, TAU/4]
+          [-TAU/3, 2*TAU/3]
+          [-4*TAU/3, 2*TAU/3]
+          [-31*TAU/3, 2*TAU/3]
+        ]
+
   describe 'turn', ->
     it 'copies the given turtle with angle increased by the source.angle', ->
       turtle =
