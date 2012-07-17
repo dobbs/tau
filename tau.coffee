@@ -4,20 +4,22 @@
   # in javascript angle % TAU will be negative if angle is negative
   # using Knuth's floored division instead to ensure angle is always positive
   _modTau = (angle) -> angle - Math.floor(angle/TAU)*TAU
+  __movePartial = (trigFn) -> (p, angle, distance) -> p + trigFn(angle) * distance
+  _moveX = __movePartial Math.cos
+  _moveY = __movePartial Math.sin
 
   turn = (turtle, source) ->
-    angle = turtle.angle + source.angle
-    $.extend({}, turtle, {angle: _modTau(angle)})
+    $.extend {}, turtle, angle: _modTau turtle.angle + source.angle
 
   move = (turtle, source) ->
-    distance = source.distance
-    angle = turtle.angle
-    dx = distance * Math.cos(angle)
-    dy = distance * Math.sin(angle)
-    $.extend({}, turtle, {x: turtle.x + dx, y: turtle.y + dy})
+    $.extend {}, turtle,
+      x: _moveX(turtle.x, turtle.angle, source.distance)
+      y: _moveY(turtle.y, turtle.angle, source.distance)
 
   Tau =
     info: 'Tau'
     turn: turn
     move: move
     _modTau: _modTau
+    _moveX: _moveX
+    _moveY: _moveY
