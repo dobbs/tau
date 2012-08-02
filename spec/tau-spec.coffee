@@ -58,38 +58,3 @@ describe 'Tau', ->
           [-4*TAU/3, 2*TAU/3]
           [-31*TAU/3, 2*TAU/3]
         ]
-    describe 'x1 = _moveX(x0, angle, distance)', ->
-      it 'calculates x1 when x0 is the origin', ->
-        expect(Tau._moveX(0, angle, 50)).toBeCloseTo(expected) for [angle, expected] in [
-          [0, 50]
-          [TAU/2, -50]
-          [-TAU/4, 0]
-          [TAU/4, 0]
-          [@smallest_angle_of_3_4_5_right_triangle, 40]
-        ]
-      it 'calculates x1 when x0 is not the origin', ->
-        expect(Tau._moveX(20, angle, 50)).toBeCloseTo(expected) for [angle, expected] in [
-          [0, 70]
-          [TAU/2, -30]
-          [-TAU/4, 20]
-          [TAU/4, 20]
-          [@smallest_angle_of_3_4_5_right_triangle, 60]
-        ]
-    describe 'y1 = _moveY(y0, angle, distance)', ->
-      it 'calculates y1 when y0 is the origin', ->
-        expect(Tau._moveY(0, angle, 50)).toBeCloseTo(expected) for [angle, expected] in [
-          [0, 0]
-          [TAU/2, 0]
-          [-TAU/4, -50]
-          [TAU/4, 50]
-          [@smallest_angle_of_3_4_5_right_triangle, 30]
-        ]
-      it 'calculates y1 when y0 is not the origin', ->
-        expect(Tau._moveY(-30, angle, 50)).toBeCloseTo(expected) for [angle, expected] in [
-          [0, -30]
-          [TAU/2, -30]
-          [-TAU/4, -80]
-          [TAU/4, 20]
-          [@smallest_angle_of_3_4_5_right_triangle, 0]
-        ]
-
