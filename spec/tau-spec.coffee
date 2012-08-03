@@ -42,35 +42,59 @@ describe 'Tau', ->
       expect(result.whatever).toEqual('unchanged')
 
   describe 'queue', ->
+    [Q, enQ, deQ, first, second] = []
+    beforeEach () ->
+      Q = []
+      enQ = $.proxy Tau.enqueue, null, Q
+      deQ = $.proxy Tau.dequeue, null, Q
+      first = createSpy 'first'
+      second = createSpy 'second'
+      enQ(first)
+
     it 'enqueue adds a function to the queue', ->
-      queue = []
-      Tau.enqueue queue, () -> true
-      expect(queue.length).toEqual(1)
-      fn = queue[0]
-      expect(fn()).toBeTruthy()
+      expect(Q.length).toEqual(1)
+      Q[0]()
+      expect(first).toHaveBeenCalled()
 
     it 'dequeue removes a function from the queue', ->
-      queue = [() -> true]
-      Tau.dequeue queue
-      expect(queue.length).toEqual(0)
+      deQ()
+      expect(Q.length).toEqual(0)
 
     describe 'first in, first out', ->
-      [Q, enQ, deQ] = []
-      beforeEach () ->
-        Q = []
-        enQ = $.proxy Tau.enqueue, null, Q
-        deQ = $.proxy Tau.dequeue, null, Q
       it 'removes items from the queue in the same order they were entered', ->
-        enQ(() -> 1)
-        console.log(Q)
-        enQ(() -> 2)
-        first = deQ()
-        second = deQ()
-        expect(first()).toEqual 1
-        expect(second()).toEqual 2
+        enQ(second)
+        deQ()()
+        expect(first).toHaveBeenCalled()
+        expect(second).not.toHaveBeenCalled()
+        deQ()()
+        expect(second).toHaveBeenCalled()
       it 'returns undefined when the queue is empty', ->
+        deQ()
         expect(deQ()).toBeUndefined()
 
+    describe 'runqueue', () ->
+      runQ = undefined
+      beforeEach () -> runQ = $.proxy Tau.runqueue, null, Q
+      it 'runs the first item in the queue', () ->
+        runQ()
+        expect(first).toHaveBeenCalled()
+        expect(second).not.toHaveBeenCalled()
+      it 'leaves the first item on the queue', () ->
+        runQ()
+        expect(Q.length).toEqual(1)
+        expect(Q[0]).toEqual(first)
+      describe 'when the first item from the queue throws Tau.STOP_ITERATION', ->
+        beforeEach () ->
+          first.andThrow Tau.STOP_ITERATION
+          second.andReturn 'the goods'
+          enQ(second)
+        it 'removes the first item from the queue', ->
+          expect(runQ).not.toThrow(Tau.STOP_ITERATION)
+          expect(Q.length).toEqual(1)
+          expect(Q[0]).toEqual(second)
+        it 'runs the second item right away', ->
+          expect(runQ()).toEqual('the goods')
+        
   describe 'smoke tests', ->
     it 'has a namespace', ->
       expect(Tau).toBeTruthy()
