@@ -118,6 +118,10 @@ describe 'Tau', ->
           expect(Q[0]).toEqual(second)
         it 'runs the second item right away', ->
           expect(runQ()).toEqual('the goods')
+      it 'throws other errors', ->
+        error = new Error('whatever')
+        first.andThrow error
+        expect(runQ).toThrow(error)
         
   describe 'smoke tests', ->
     it 'has a namespace', ->
