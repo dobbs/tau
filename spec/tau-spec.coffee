@@ -37,6 +37,34 @@ describe 'Tau', ->
       result = Tau.moveTurtle(turtle, distance)
       expect(result.whatever).toEqual('unchanged')
 
+  describe 'drawing', ->
+    [context, turtle] = []
+    beforeEach () ->
+      context = createSpyObj 'context', [
+        'beginPath'
+        'moveTo'
+        'lineTo'
+        'stroke'
+        'clearRect'
+      ]
+      context.canvas =
+        width: 600
+        height: 400
+      turtle =
+        x: 300
+        y: 200
+    it 'moveTo positions the given context at the given turtle', ->
+      Tau.moveTo context, turtle
+      expect(context.beginPath).toHaveBeenCalled()
+      expect(context.moveTo).toHaveBeenCalledWith(300, 200)
+    it 'lineTo draws a line to the given turtle', ->
+      Tau.lineTo context, turtle
+      expect(context.lineTo).toHaveBeenCalledWith(300, 200)
+      expect(context.stroke).toHaveBeenCalled()
+    it 'clearAll clears the entire canvas', ->
+      Tau.clearAll context
+      expect(context.clearRect).toHaveBeenCalledWith(0, 0, 600, 400)
+
   describe 'queue', ->
     [Q, enQ, deQ, first, second] = []
     beforeEach () ->

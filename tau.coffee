@@ -28,11 +28,23 @@
       deQ q
       runQ q
 
+  moveTo = (context, turtle) ->
+    context.beginPath()
+    context.moveTo(turtle.x, turtle.y)
+  lineTo = (context, turtle) ->
+    context.lineTo(turtle.x, turtle.y)
+    context.stroke()
+  clearAll = (context) ->
+    context.clearRect 0, 0, context.canvas.width, context.canvas.height
+
   Tau =
     STOP_ITERATION: STOP_ITERATION
     info: 'Tau'
     turnTurtle: turnTurtle
     moveTurtle: moveTurtle
+    moveTo: moveTo
+    lineTo: lineTo
+    clearAll: clearAll
     enQ: enQ
     deQ: deQ
     runQ: runQ
