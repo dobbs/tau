@@ -1,4 +1,4 @@
-jQuery = require('jquery')
+jQuery = $ = require('jquery')
 Tau = require('../tau.coffee').create(jQuery, @)
 describe 'Tau', ->
 
@@ -40,6 +40,36 @@ describe 'Tau', ->
         distance: 100
       result = Tau.move(turtle, source)
       expect(result.whatever).toEqual('unchanged')
+
+  describe 'queue', ->
+    it 'enqueue adds a function to the queue', ->
+      queue = []
+      Tau.enqueue queue, () -> true
+      expect(queue.length).toEqual(1)
+      fn = queue[0]
+      expect(fn()).toBeTruthy()
+
+    it 'dequeue removes a function from the queue', ->
+      queue = [() -> true]
+      Tau.dequeue queue
+      expect(queue.length).toEqual(0)
+
+    describe 'first in, first out', ->
+      [Q, enQ, deQ] = []
+      beforeEach () ->
+        Q = []
+        enQ = $.proxy Tau.enqueue, null, Q
+        deQ = $.proxy Tau.dequeue, null, Q
+      it 'removes items from the queue in the same order they were entered', ->
+        enQ(() -> 1)
+        console.log(Q)
+        enQ(() -> 2)
+        first = deQ()
+        second = deQ()
+        expect(first()).toEqual 1
+        expect(second()).toEqual 2
+      it 'returns undefined when the queue is empty', ->
+        expect(deQ()).toBeUndefined()
 
   describe 'smoke tests', ->
     it 'has a namespace', ->
