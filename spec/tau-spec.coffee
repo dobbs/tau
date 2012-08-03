@@ -2,31 +2,28 @@ jQuery = $ = require('jquery')
 Tau = require('../tau.coffee').create(jQuery, @)
 describe 'Tau', ->
 
-  describe 'turn', ->
+  describe 'turnTurtle', ->
     it 'copies the given turtle with angle increased by the source.angle', ->
       turtle =
         angle: TAU/3
-      source =
-        angle: TAU/6
-      expect(Tau.turn(turtle, source)).toEqual({angle: 3*TAU/6})
+      angle = TAU/6
+      expect(Tau.turnTurtle(turtle, angle)).toEqual({angle: 3*TAU/6})
 
     it 'copies other properties on the turtle without modification', ->
       turtle =
         whatever: 'unchanged'
         angle: 0
-      source =
-        angle: TAU/5
-      expect(Tau.turn(turtle, source)).toEqual({whatever: 'unchanged', angle: TAU/5})
+      angle = TAU/5
+      expect(Tau.turnTurtle(turtle, angle)).toEqual({whatever: 'unchanged', angle: TAU/5})
         
-  describe 'move', ->
+  describe 'moveTurtle', ->
     it 'copies the given turtle with a new position', ->
       turtle =
         x: 25
         y: 15
         angle: @smallest_angle_of_3_4_5_right_triangle
-      source =
-        distance: 50
-      result = Tau.move(turtle, source)
+      distance = 50
+      result = Tau.moveTurtle(turtle, distance)
       expect(result.x).toBeCloseTo(25 + 40)
       expect(result.y).toBeCloseTo(15 + 30)
       expect(result.angle).toEqual(@smallest_angle_of_3_4_5_right_triangle)
@@ -36,27 +33,26 @@ describe 'Tau', ->
         x: 25
         y: 15
         whatever: 'unchanged'
-      source =
-        distance: 100
-      result = Tau.move(turtle, source)
+      distance = 100
+      result = Tau.moveTurtle(turtle, distance)
       expect(result.whatever).toEqual('unchanged')
 
   describe 'queue', ->
     [Q, enQ, deQ, first, second] = []
     beforeEach () ->
       Q = []
-      enQ = $.proxy Tau.enqueue, null, Q
-      deQ = $.proxy Tau.dequeue, null, Q
+      enQ = $.proxy Tau.enQ, null, Q
+      deQ = $.proxy Tau.deQ, null, Q
       first = createSpy 'first'
       second = createSpy 'second'
       enQ(first)
 
-    it 'enqueue adds a function to the queue', ->
+    it 'enQ adds a function to the queue', ->
       expect(Q.length).toEqual(1)
       Q[0]()
       expect(first).toHaveBeenCalled()
 
-    it 'dequeue removes a function from the queue', ->
+    it 'deQ removes a function from the queue', ->
       deQ()
       expect(Q.length).toEqual(0)
 
@@ -72,9 +68,9 @@ describe 'Tau', ->
         deQ()
         expect(deQ()).toBeUndefined()
 
-    describe 'runqueue', () ->
+    describe 'runQ', () ->
       runQ = undefined
-      beforeEach () -> runQ = $.proxy Tau.runqueue, null, Q
+      beforeEach () -> runQ = $.proxy Tau.runQ, null, Q
       it 'runs the first item in the queue', () ->
         runQ()
         expect(first).toHaveBeenCalled()
