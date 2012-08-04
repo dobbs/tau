@@ -27,8 +27,8 @@ describe 'Tau', ->
       source =
         distance: 50
       result = Tau.move(turtle, source)
-      expect(result.x).toRoundTo(25 + 40)
-      expect(result.y).toRoundTo(15 + 30)
+      expect(result.x).toBeCloseTo(25 + 40)
+      expect(result.y).toBeCloseTo(15 + 30)
       expect(result.angle).toEqual(@smallest_angle_of_3_4_5_right_triangle)
 
     it 'copies other properties on the turtle without modification', ->
@@ -50,7 +50,7 @@ describe 'Tau', ->
   describe 'internals', ->
     describe '_modTau', ->
       it 'calculates angle % TAU where result is always a positive fraction of TAU', ->
-        expect(Tau._modTau(given)).toRoundTo(expected,7) for [given, expected] in [
+        expect(Tau._modTau(given)).toBeCloseTo(expected,7) for [given, expected] in [
           [TAU/4, TAU/4]
           [5*TAU/4, TAU/4]
           [41*TAU/4, TAU/4]
@@ -60,7 +60,7 @@ describe 'Tau', ->
         ]
     describe 'x1 = _moveX(x0, angle, distance)', ->
       it 'calculates x1 when x0 is the origin', ->
-        expect(Tau._moveX(0, angle, 50)).toRoundTo(expected) for [angle, expected] in [
+        expect(Tau._moveX(0, angle, 50)).toBeCloseTo(expected) for [angle, expected] in [
           [0, 50]
           [TAU/2, -50]
           [-TAU/4, 0]
@@ -68,7 +68,7 @@ describe 'Tau', ->
           [@smallest_angle_of_3_4_5_right_triangle, 40]
         ]
       it 'calculates x1 when x0 is not the origin', ->
-        expect(Tau._moveX(20, angle, 50)).toRoundTo(expected) for [angle, expected] in [
+        expect(Tau._moveX(20, angle, 50)).toBeCloseTo(expected) for [angle, expected] in [
           [0, 70]
           [TAU/2, -30]
           [-TAU/4, 20]
@@ -77,7 +77,7 @@ describe 'Tau', ->
         ]
     describe 'y1 = _moveY(y0, angle, distance)', ->
       it 'calculates y1 when y0 is the origin', ->
-        expect(Tau._moveY(0, angle, 50)).toRoundTo(expected) for [angle, expected] in [
+        expect(Tau._moveY(0, angle, 50)).toBeCloseTo(expected) for [angle, expected] in [
           [0, 0]
           [TAU/2, 0]
           [-TAU/4, -50]
@@ -85,7 +85,7 @@ describe 'Tau', ->
           [@smallest_angle_of_3_4_5_right_triangle, 30]
         ]
       it 'calculates y1 when y0 is not the origin', ->
-        expect(Tau._moveY(-30, angle, 50)).toRoundTo(expected) for [angle, expected] in [
+        expect(Tau._moveY(-30, angle, 50)).toBeCloseTo(expected) for [angle, expected] in [
           [0, -30]
           [TAU/2, -30]
           [-TAU/4, -80]
