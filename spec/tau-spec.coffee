@@ -21,12 +21,12 @@ describe 'Tau', ->
       turtle =
         x: 25
         y: 15
-        angle: @smallest_angle_of_3_4_5_right_triangle
+        angle: @smallest_angle_of_3_4_5_triangle
       distance = 50
       result = Tau.moveTurtle(turtle, distance)
       expect(result.x).toBeCloseTo(25 + 40)
       expect(result.y).toBeCloseTo(15 + 30)
-      expect(result.angle).toEqual(@smallest_angle_of_3_4_5_right_triangle)
+      expect(result.angle).toEqual(@smallest_angle_of_3_4_5_triangle)
 
     it 'copies other properties on the turtle without modification', ->
       turtle =
@@ -128,6 +128,34 @@ describe 'Tau', ->
         emptyQ()
         expect(Q.length).toEqual(0)
         
+  describe 'polygonIterator', ->
+    [context, turtle] = []
+    beforeEach () ->
+      context = createSpyObj 'context', [
+        'beginPath'
+        'moveTo'
+        'lineTo'
+        'stroke'
+      ]
+      turtle =
+        x: 2000
+        y: 1000
+        angle: 0
+    it 'draws segments of a polygon', () ->
+      iter = Tau.polygonIterator(context, turtle, @smallest_angle_of_8_15_17_triangle, 170)
+      iter()
+      expect(context.beginPath).toHaveBeenCalled()
+      expect(context.moveTo).toHaveBeenCalledWith(2000, 1000)
+      expect(context.lineTo).toHaveBeenCalledWith(2150, 1080)
+      expect(context.stroke).toHaveBeenCalled()
+    it 'accepts an iteration limit', () ->
+      iter = Tau.polygonIterator(context, turtle, @smallest_angle_of_8_15_17_triangle, 170, 3)
+      iter()
+      iter()
+      iter()
+      expect(iter()).toEqual(Tau.STOP_ITERATION)
+      expect(context.stroke.calls.length).toEqual(3)
+
   describe 'smoke tests', ->
     it 'has a namespace', ->
       expect(Tau).toBeTruthy()

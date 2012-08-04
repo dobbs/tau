@@ -36,6 +36,16 @@
   clearAll = (context) ->
     context.clearRect 0, 0, context.canvas.width, context.canvas.height
 
+  polygonIterator = (context, turtle, angle, distance, limit=600) ->
+    limitExceeded = () -> limit-- <= 0
+    () ->
+      return STOP_ITERATION if limitExceeded()
+      moveTo context, turtle
+      turtle = turnTurtle turtle, angle
+      turtle = moveTurtle turtle, distance
+      lineTo context, turtle
+      turtle
+
   Tau =
     STOP_ITERATION: STOP_ITERATION
     info: 'Tau'
@@ -48,4 +58,5 @@
     deQ: deQ
     runQ: runQ
     emptyQ: emptyQ
+    polygonIterator: polygonIterator
     _modTau: _modTau
