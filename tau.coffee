@@ -25,6 +25,7 @@
     return result unless result == STOP_ITERATION
     deQ q
     runQ q
+  emptyQ = (q) -> q.length = 0
 
   moveTo = (context, turtle) ->
     context.beginPath()
@@ -46,4 +47,5 @@
     enQ: enQ
     deQ: deQ
     runQ: runQ
+    emptyQ: emptyQ
     _modTau: _modTau

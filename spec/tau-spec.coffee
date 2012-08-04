@@ -66,11 +66,13 @@ describe 'Tau', ->
       expect(context.clearRect).toHaveBeenCalledWith(0, 0, 600, 400)
 
   describe 'queue', ->
-    [Q, enQ, deQ, first, second] = []
+    [Q, enQ, deQ, runQ, emptyQ, first, second] = []
     beforeEach () ->
       Q = []
       enQ = $.proxy Tau.enQ, null, Q
       deQ = $.proxy Tau.deQ, null, Q
+      runQ = $.proxy Tau.runQ, null, Q
+      emptyQ = $.proxy Tau.emptyQ, null, Q
       first = createSpy 'first'
       second = createSpy 'second'
       enQ(first)
@@ -97,8 +99,6 @@ describe 'Tau', ->
         expect(deQ()).toBeUndefined()
 
     describe 'runQ', () ->
-      runQ = undefined
-      beforeEach () -> runQ = $.proxy Tau.runQ, null, Q
       it 'runs the first item in the queue', () ->
         runQ()
         expect(first).toHaveBeenCalled()
@@ -107,6 +107,10 @@ describe 'Tau', ->
         runQ()
         expect(Q.length).toEqual(1)
         expect(Q[0]).toEqual(first)
+      it 'can run the first item on the queue more than once', () ->
+        runQ()
+        runQ()
+        expect(first.calls.length).toEqual 2
       describe 'when the first item from the queue returns Tau.STOP_ITERATION', ->
         beforeEach () ->
           first.andReturn Tau.STOP_ITERATION
@@ -118,6 +122,11 @@ describe 'Tau', ->
           expect(Q[0]).toEqual(second)
         it 'runs the second item right away', ->
           expect(runQ()).toEqual('the goods')
+
+    describe 'emptyQ', ->
+      it 'removes all the items from the given queue', () ->
+        emptyQ()
+        expect(Q.length).toEqual(0)
         
   describe 'smoke tests', ->
     it 'has a namespace', ->
