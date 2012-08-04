@@ -156,6 +156,20 @@ describe 'Tau', ->
       expect(iter()).toEqual(Tau.STOP_ITERATION)
       expect(context.stroke.calls.length).toEqual(3)
 
+  describe 'eventHandler', ->
+    [event, $window] = []
+    beforeEach () ->
+      event =
+        pageX: 360
+        pageY: 80
+      $window =
+        width: () -> 480
+        height: () -> 320
+    it 'calculates a distance to move from the coordinates on the page', ->
+      expect(Tau._createDistanceFromEvent($window, event)).toEqual(80) # 320 * 360/480) 
+    it 'calculates an angle to turn from the coordinates on the page', ->
+      expect(Tau._createAngleFromEvent($window, event)).toEqual(TAU*360/480)
+
   describe 'smoke tests', ->
     it 'has a namespace', ->
       expect(Tau).toBeTruthy()
