@@ -107,21 +107,17 @@ describe 'Tau', ->
         runQ()
         expect(Q.length).toEqual(1)
         expect(Q[0]).toEqual(first)
-      describe 'when the first item from the queue throws Tau.STOP_ITERATION', ->
+      describe 'when the first item from the queue returns Tau.STOP_ITERATION', ->
         beforeEach () ->
-          first.andThrow Tau.STOP_ITERATION
+          first.andReturn Tau.STOP_ITERATION
           second.andReturn 'the goods'
           enQ(second)
         it 'removes the first item from the queue', ->
-          expect(runQ).not.toThrow(Tau.STOP_ITERATION)
+          runQ()
           expect(Q.length).toEqual(1)
           expect(Q[0]).toEqual(second)
         it 'runs the second item right away', ->
           expect(runQ()).toEqual('the goods')
-      it 'throws other errors', ->
-        error = new Error('whatever')
-        first.andThrow error
-        expect(runQ).toThrow(error)
         
   describe 'smoke tests', ->
     it 'has a namespace', ->

@@ -21,12 +21,10 @@
   deQ = (q) -> q.shift()
   runQ = (q) ->
     return unless fn = q[0]
-    try
-      fn()
-    catch e
-      throw e unless e == STOP_ITERATION
-      deQ q
-      runQ q
+    result = fn()
+    return result unless result == STOP_ITERATION
+    deQ q
+    runQ q
 
   moveTo = (context, turtle) ->
     context.beginPath()
