@@ -66,13 +66,15 @@ describe 'Tau', ->
       expect(context.clearRect).toHaveBeenCalledWith(0, 0, 600, 400)
 
   describe 'queue', ->
-    [Q, enQ, deQ, runQ, emptyQ, first, second] = []
+    [Q, enQ, deQ, runQ, emptyQ, startQ, stopQ, first, second] = []
     beforeEach () ->
       Q = []
       enQ = $.proxy Tau.enQ, null, Q
       deQ = $.proxy Tau.deQ, null, Q
       runQ = $.proxy Tau.runQ, null, Q
       emptyQ = $.proxy Tau.emptyQ, null, Q
+      startQ = $.proxy Tau.startQ, null, Q
+      stopQ = $.proxy Tau.stopQ, null, Q
       first = createSpy 'first'
       second = createSpy 'second'
       enQ(first)
@@ -122,6 +124,34 @@ describe 'Tau', ->
           expect(Q[0]).toEqual(second)
         it 'runs the second item right away', ->
           expect(runQ()).toEqual('the goods')
+
+      describe 'startQ', ->
+        it 'saves the timeout as an attribute on the given Q', () ->
+          startQ()
+          expect(Q.timeout).toBeDefined()
+        it 'calls runQ periodically once started', () ->
+          runs () -> startQ(20)
+          waits 15
+          runs () ->
+            expect(first).toHaveBeenCalled()
+            expect(first.calls.length).toEqual 1
+          waits 40
+          runs () ->
+            expect(first.calls.length).toEqual 3
+          
+      describe 'stopQ', ->
+        it 'clears the timeout on the given Q', () ->
+          startQ()
+          stopQ()
+          expect(Q.timeout).not.toBeDefined()
+        it 'stops calling runQ once stopped', () ->
+          runs () -> startQ(20)
+          waits 35
+          runs () -> stopQ()
+          waits 40
+          runs () ->
+            expect(first).toHaveBeenCalled()
+            expect(first.calls.length).toEqual 2
 
     describe 'emptyQ', ->
       it 'removes all the items from the given queue', () ->

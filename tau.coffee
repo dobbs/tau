@@ -26,6 +26,14 @@
     deQ q
     runQ q
   emptyQ = (q) -> q.length = 0
+  startQ = (q, delay=5) ->
+    timer = () ->
+      runQ q
+      q.timeout = setTimeout timer, delay
+    timer()
+  stopQ = (q) ->
+    clearTimeout(q.timeout)
+    delete q.timeout
 
   moveTo = (context, turtle) ->
     context.beginPath()
@@ -73,6 +81,8 @@
     deQ: deQ
     runQ: runQ
     emptyQ: emptyQ
+    startQ: startQ
+    stopQ: stopQ
     polygonIterator: polygonIterator
     eventHandler: eventHandler
     _modTau: _modTau
