@@ -45,12 +45,21 @@
       turtle = moveTurtle turtle, distance
       lineTo context, turtle
       turtle
-  clearAllAndQ = (context, q) ->
-    emptyQ q
-    clearAll context
+
   _createAngleFromEvent = ($window, event) -> TAU * event.pageX / $window.width()
   _createDistanceFromEvent = ($window, event) ->
     Math.min($window.width(), $window.height()) * event.pageY / $window.height()
+  eventHandler = ($window, context, q, event) ->
+    angle = _createAngleFromEvent $window, event
+    distance = _createDistanceFromEvent $window, event
+    turtle =
+      x: Math.floor(context.canvas.width / 2)
+      y: Math.floor(context.canvas.height / 2)
+      angle: 0
+    iter = polygonIterator context, turtle, angle, distance
+    clearAll context
+    emptyQ q
+    enQ iter
 
   Tau =
     STOP_ITERATION: STOP_ITERATION
@@ -65,7 +74,7 @@
     runQ: runQ
     emptyQ: emptyQ
     polygonIterator: polygonIterator
-    clearAllAndQ: clearAllAndQ
+    eventHandler: eventHandler
     _modTau: _modTau
     _createAngleFromEvent: _createAngleFromEvent
     _createDistanceFromEvent: _createDistanceFromEvent
