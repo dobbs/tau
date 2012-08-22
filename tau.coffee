@@ -54,20 +54,46 @@
       lineTo context, turtle
       turtle
 
-  _createAngleFromEvent = ($window, event) -> TAU * event.pageX / $window.width()
-  _createDistanceFromEvent = ($window, event) ->
-    Math.min($window.width(), $window.height()) * event.pageY / $window.height()
-  eventHandler = ($window, context, q, event) ->
-    angle = _createAngleFromEvent $window, event
-    distance = _createDistanceFromEvent $window, event
-    turtle =
-      x: Math.floor(context.canvas.width / 2)
-      y: Math.floor(context.canvas.height / 2)
-      angle: 0
-    iter = polygonIterator context, turtle, angle, distance
-    clearAll context
-    emptyQ q
-    enQ iter
+  _widthFromEvent = (event) -> event.view.document.body.clientWidth
+  _heightFromEvent = (event) -> event.view.document.body.clientHeight
+  _createAngleFromEvent = (event) -> TAU * event.pageX / _widthFromEvent(event)
+  _createDistanceFromEvent = (event) ->
+    w = _widthFromEvent event
+    h = _heightFromEvent event
+    Math.min(w, h) * event.pageY / h
+  createCanvas = ($window, q) ->
+    width = $window.width() - 20
+    height = $window.height() - 20
+    $canvas = $("<canvas width=\"#{width}\" height=\"#{height}\">")
+    context = $canvas[0].getContext('2d')
+
+    moveHandler = (event) ->
+      width = _widthFromEvent event
+      height = _heightFromEvent event
+      angle = _createAngleFromEvent event
+      distance = _createDistanceFromEvent event
+      turtle =
+        x: Math.floor(width / 2)
+        y: Math.floor(height / 2)
+        angle: 0
+      iter = polygonIterator context, turtle, angle, distance
+      clearAll context
+      emptyQ q
+      enQ q, iter
+
+    mouseDownHandler = (event) ->
+      $(event.view.document)
+        .on('mousemove', moveHandler)
+        .on('mouseup', (e) -> $(e.view.document).off('mousemove', moveHandler))
+
+    $document = $($window[0].document)
+    $document.find('body').append($canvas)
+    $document.on 'mousedown', mouseDownHandler
+    $document.on 'touchmove', (event) ->
+      event.preventDefault()
+      touch = event.originalEvent.changedTouches?[0]
+      moveHandler($.extend({}, touch, {view: event.view}))
+    startQ q
 
   Tau =
     STOP_ITERATION: STOP_ITERATION
@@ -84,7 +110,7 @@
     startQ: startQ
     stopQ: stopQ
     polygonIterator: polygonIterator
-    eventHandler: eventHandler
+    createCanvas: createCanvas
     _modTau: _modTau
     _createAngleFromEvent: _createAngleFromEvent
     _createDistanceFromEvent: _createDistanceFromEvent
