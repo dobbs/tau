@@ -61,11 +61,27 @@
     w = _widthFromEvent event
     h = _heightFromEvent event
     Math.min(w, h) * event.pageY / h
+
+  touchmoveAdapter = (moveHandler) ->
+    (touchevent) ->
+      touchevent.preventDefault()
+      event = $.extend({}, touchevent.originalEvent.changedTouches[0], {view: event.view})
+      moveHandler(event)
+    
+  mousedownAdapter = (moveHandler) ->
+    (event) ->
+      doc = event.view.document
+      $(doc)
+        .on('mousemove', moveHandler)
+        .on('mouseup', (e) -> $(e.view.document).off('mousemove', moveHandler))
+
   createCanvas = ($window, q) ->
     width = $window.width() - 20
     height = $window.height() - 20
     $canvas = $("<canvas width=\"#{width}\" height=\"#{height}\">")
     context = $canvas[0].getContext('2d')
+    $document = $($window[0].document)
+    $document.find('body').append($canvas)
 
     moveHandler = (event) ->
       width = _widthFromEvent event
@@ -81,18 +97,8 @@
       emptyQ q
       enQ q, iter
 
-    mouseDownHandler = (event) ->
-      $(event.view.document)
-        .on('mousemove', moveHandler)
-        .on('mouseup', (e) -> $(e.view.document).off('mousemove', moveHandler))
-
-    $document = $($window[0].document)
-    $document.find('body').append($canvas)
-    $document.on 'mousedown', mouseDownHandler
-    $document.on 'touchmove', (event) ->
-      event.preventDefault()
-      touch = event.originalEvent.changedTouches?[0]
-      moveHandler($.extend({}, touch, {view: event.view}))
+    $document.on 'mousedown', mousedownAdapter(moveHandler)
+    $document.on 'touchmove', touchmoveAdapter(moveHandler)
     startQ q
 
   Tau =
