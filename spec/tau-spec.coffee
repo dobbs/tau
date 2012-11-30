@@ -69,12 +69,9 @@ describe 'Tau', ->
     [Q, enQ, deQ, runQ, emptyQ, startQ, stopQ, first, second] = []
     beforeEach () ->
       Q = []
-      enQ = $.proxy Tau.enQ, null, Q
-      deQ = $.proxy Tau.deQ, null, Q
-      runQ = $.proxy Tau.runQ, null, Q
-      emptyQ = $.proxy Tau.emptyQ, null, Q
-      startQ = $.proxy Tau.startQ, null, Q
-      stopQ = $.proxy Tau.stopQ, null, Q
+      [enQ, deQ, runQ, emptyQ, startQ, stopQ] = ($.proxy(fn, null, Q) for fn in [
+        Tau.enQ, Tau.deQ, Tau.runQ, Tau.emptyQ, Tau.startQ, Tau.stopQ
+      ])
       first = createSpy 'first'
       second = createSpy 'second'
       enQ(first)
