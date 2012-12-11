@@ -1,5 +1,8 @@
 jQuery = $ = require('jquery')
-Tau = require('../tau.coffee').create(jQuery, @)
+Tau = require('../tau.coffee')
+TAU = Tau.TAU
+Demo = Tau.createDemo($)
+
 describe 'Tau', ->
 
   describe 'turnTurtle', ->
@@ -169,14 +172,14 @@ describe 'Tau', ->
         y: 1000
         angle: 0
     it 'draws segments of a polygon', () ->
-      iter = Tau.polygonIterator(context, turtle, @smallest_angle_of_8_15_17_triangle, 170)
+      iter = Demo.polygonIterator(context, turtle, @smallest_angle_of_8_15_17_triangle, 170)
       iter()
       expect(context.beginPath).toHaveBeenCalled()
       expect(context.moveTo).toHaveBeenCalledWith(2000, 1000)
       expect(context.lineTo).toHaveBeenCalledWith(2150, 1080)
       expect(context.stroke).toHaveBeenCalled()
     it 'accepts an iteration limit', () ->
-      iter = Tau.polygonIterator(context, turtle, @smallest_angle_of_8_15_17_triangle, 170, 3)
+      iter = Demo.polygonIterator(context, turtle, @smallest_angle_of_8_15_17_triangle, 170, 3)
       iter()
       iter()
       iter()
@@ -195,9 +198,9 @@ describe 'Tau', ->
               clientWidth: 480
               clientHeight: 320
     it 'calculates a distance to move from the coordinates on the page', ->
-      expect(Tau._createDistanceFromEvent(event)).toEqual(80) # 320 * 360/480) 
+      expect(Demo._createDistanceFromEvent(event)).toEqual(80) # 320 * 360/480) 
     it 'calculates an angle to turn from the coordinates on the page', ->
-      expect(Tau._createAngleFromEvent(event)).toEqual(TAU*360/480)
+      expect(Demo._createAngleFromEvent(event)).toEqual(TAU*360/480)
 
   describe 'smoke tests', ->
     it 'has a namespace', ->
