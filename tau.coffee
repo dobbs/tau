@@ -97,11 +97,13 @@ extend Tau,
 
     createCanvas = ($window, q) ->
       width = $window.width() - 20
-      height = $window.height() - 20
+      height = $window.height() - 40
       $canvas = $("<canvas width=\"#{width}\" height=\"#{height}\">")
       context = $canvas[0].getContext('2d')
       $document = $($window[0].document)
-      $document.find('body').append($canvas)
+      $document.find('body')
+        .append('<p>drag to set edge size and angle of rotation, release to let the turtle do its thing</p>')
+        .append($canvas)
 
       moveHandler = (event) ->
         width = _widthFromEvent event

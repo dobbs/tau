@@ -1,11 +1,13 @@
 
 @media all and (orientation:portrait) {
 #tau {float: left;}
+p {text-align: center;}
 canvas {border: 1px solid black; margin: 1em;}
 }
 
 @media all and (orientation:landscape) {
 #tau {float: left;}
+p {text-align: center;}
 canvas {border: 1px solid black; margin: 1em;}
 }
 
