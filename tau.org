@@ -1,0 +1,176 @@
+* What I have
+** move(turtle, source)
+   moves a turtle, asks turtle for it's x and y, asks source for it's distance property
+** turn(turtle, source)
+   turns a turtle, asks turtle for it's angle property, asks source for it's angle property
+* Ideas
+** change move() and turn() to accept functions in place of objects
+** change move() and turn() to accept javascript path expressions as strings
+** function which instruments plain js objects with curried move and turn methods
+** use jQuery.proxy() for partial application of functions
+** function which instruments plan js objects with move() and turn() methods for bales
+** instruction
+   name: move || turn
+   action:  move || turn
+   target:  turtle || bale
+   source:  source.distance || source.distance() || source.angle || source.angle()
+** instruction list
+   name: 
+   instructions:  [instruction, instruction ...]
+   action:  move || turn
+   strategy?
+
+
+* maybe separate the state (angle, x, y) from the instructions (move, turn)
+** instructions would take a turtle or bale, a source for units, and a strategy?
+** or maybe the turtle or bale would hold the strategy for responding to move, turn
+** or maybe the structure is more flat?  moveTogether vs moveEach.
+** I LIKE THE FUNCTIONAL ABSTRACTION THIS WAY
+   - turtle can be just {angle, x, y} -- and penColor, lineWeight, or other state
+   - maybe the functions can change only one state element (in which case move needs {xy:[x, y]})
+   - or move is the only special case... it needs to know the angle and the previous position
+   - or turn must set dx=cos(angle), dy=sin(angle) on the state
+
+* how should turtles be named?
+** the main trick is naming bales
+** move(turtle, source)
+   var new = $.extend(true, {}, turtle);
+   var strategy = turtle.strategy();
+   strategy.move(new, source.angle(), source.scalar());
+
+
+* todos archived on 2012-07-23
+** TODO statecharts -- model for visualizing up and down layers of abstraction
+   http://www.wisdom.weizmann.ac.il/~dharel/SCANNED.PAPERS/Statecharts.pdf
+** TODO inspiration
+   http://www.artami.co.uk/turtleart/indexdigital.htm
+   http://turtleart.org/
+** TODO investigate this for editing the programs
+   http://neyric.github.com/wireit/
+** TODO investigate these
+   http://www.tersus.com
+   http://www.lilyapp.org/   
+** TODO previous art
+   http://drdobbs.com/blogs/architecture-and-design/228701824
+   http://drdobbs.com/architecture-and-design/184409677?pgno=24
+   http://drdobbs.com/database/231400148?pgno=2&at=validate&actionType=contentgating
+
+   http://andescotia.com/news/
+
+   Fabrik History: http://wiki.squeak.org/squeak/1227
+
+   http://www.google.com/search?gcx=c&sourceid=chrome&ie=UTF-8&q=open+source+visual+programming+library
+
+   http://www.google.com/url?sa=t&rct=j&q=open%20source%20visual%20programming%20library&source=web&cd=6&ved=0CEEQFjAF&url=http%3A%2F%2Fneyric.github.com%2Fwireit%2F&ei=8gjYTrqMJpSOigKQiq2fCg&usg=AFQjCNF2Uoy6Au9XwmEYv8l_C-G3S-WrVA&cad=rja
+   http://www.google.com/url?sa=t&rct=j&q=open%20source%20visual%20programming%20library&source=web&cd=7&ved=0CEgQFjAG&url=http%3A%2F%2Fwww.tersus.com%2F&ei=8gjYTrqMJpSOigKQiq2fCg&usg=AFQjCNGz777_bNh11gmOdG8ZY4yFB2C8zQ&cad=rja
+   http://www.google.com/url?sa=t&rct=j&q=open%20source%20visual%20programming%20library&source=web&cd=8&ved=0CE8QFjAH&url=http%3A%2F%2Fwww.roborealm.com%2Flinks%2Fvision_software.php&ei=8gjYTrqMJpSOigKQiq2fCg&usg=AFQjCNEbuL9h9wJAEsb-CDIOSM3DLK6JSQ&cad=rja
+
+   http://en.wikipedia.org/wiki/Prograph
+   http://en.wikipedia.org/wiki/Dataflow
+   http://drdobbs.com/database/231400148
+
+** TODO brainstorming declarative storage for saved functions and history
+//        commands: {
+//            vector: [[turn], [move]],
+//            pentagon: [[setturnsize, 2*Math.PI/5], [setrepeatcount, 5], [repeat, vector]],
+//            star: [[setturnsize, 4*Math.PI/5], [setrepeatcount, 5], [repeat, vector]]
+//        },
+//
+//        history: [
+//            [clone, 'origin', 'turtle'],
+//            [focus, turtlepi.named.turtle.at[0]],
+//            [setmovesize, 60],
+//            [pentagon],
+//        ],
+
+** TODO robotics control language?
+   http://www.kickstarter.com/projects/peterseid/romo-the-smartphone-robot?ref=live
+** TODO ideas while watching Elliott with the clicking one
+   - clicks on the canvas highlight like a text window
+     (suppress this or do something with canvas clicks)
+   - Need a way to save drawings ("Dada, I drew a flag")
+     Edit a progam
+   - "Dada, I lost the turtle".  Need to deal with the turtle
+     and the boundaries of the canvas.  
+     - ? allow panning or zooming
+     - ? add a zoom-to-the-turtle button or gesture
+     - ? add a clear button
+     - ? add a home button
+     - when I asked Elliott, he wants the turtle to be able to walk
+       off the screen.  Gave me the idea of having multiple canvases
+       and letting the turtle walk off of one canvas and onto the
+       adjacent canvas.  Hmm.... what letting a turtle walk off of one
+       iPod and onto the next kids iPod.  A shared programming
+       exercise where they can pass the turtle around.
+   - Elliott clicked the turtle several times trying to control the
+     pen.
+     - ? penup/pendown with that click event?
+     - ? popup a menu to control turtlestate (color, size, linewidth)
+
+** TODO global vars and global focus and async rendering don't mix
+   using turtlepi.focus() and turtlepi.named.focus
+   with setTimeout in draw()
+   the pentagon in the main window was hijacking the focus() before
+   the arrow in the move button could be drawn.
+** TODO create rendering strategies: animate via setTimeout vs. inanimate for loop
+** TODO experiment with fluid Infusion project for the buttons in my UI
+   http://wiki.fluidproject.org/display/docs/Infusion+Documentation
+   http://wiki.fluidproject.org/display/docs/Developer+Guide
+   http://wiki.fluidproject.org/display/docs/Tutorial+-+Getting+started+with+Infusion
+
+   - https://github.com/care/Infusion-Visualizations
+     fluid component with processing.js example example code to see
+     how to integrate infusion framework with access to canvas element
+   - https://github.com/Math-on-a-Sphere/Math-on-a-Sphere
+     another example for integration between infusion and canvas
+** TODO experiment with jQuery deferred api for animation queue
+   http://msdn.microsoft.com/en-us/scriptjunkie/gg723713
+** TODO experiment with WebGL
+   can I issue turtle instructions to a 2D canvas in 3D space and
+   render the image on the ground while projecting an image on a
+   picture plane?  Or more than one picture plane?
+   
+   So a finger-painting application that gives visual feedback about
+   how the painted scribble on the ground is distorted under
+   perspective projection as a way of giving kids an intuitive
+   understanding of 3D space and geometric projections
+** TODO experiment with XCode and Cocoa APIs
+   embed a WebKit view and see if we can create javascript hooks to
+   access the hardware, especially the accelerometers, gyros, compass,
+   maybe the camera
+
+
+* todos archived on 2011-10-14
+*** next steps for the code
+**** TODO record and playback
+     get something approaching a visual programming environment by
+     providing a record-and-playback metaphor (or something similar)
+     - [ ] sort history by time instead of by name
+           this lets the commands entered interactively read like a program
+     - [ ] add a tool to save a function from the current history
+           the function gets a name but no parameters
+           maybe use the TurtleRecorder to save and play the functions
+     - [ ] give user a way to rearrange the order of the command history
+*** TODO create stylesheets for iPhone and iPad, both portrait and landscape
+*** TODO create HTML5 offline application (test on iPhone and iPad)
+*** TODO create a lesson around fractals.js (recreate the work with OWL)
+*** TODO test on Android
+*** TODO create an iPhone app
+*** TODO create an Android app
+*** TODO create a maze game as an instructional tool for learning turtle commands
+*** TODO create Drive a Car lessons
+*** TODO get some of these examples working:
+    http://wn.com/Turtle_graphics
+    especially the SPACE-F-R-P-G macros in video 5
+    http://llk.media.mit.edu/projects/circles/index.html
+    (might be helpful when we add 3d)
+    http://en.wikipedia.org/wiki/Cheloniidae_Turtle_Graphics
+    if we can do all of these, then we've probably got a complete
+    implementation:
+    http://www.rupert.id.au/microworlds/turtlegraphics.php
+*** TODO consider adding methods to Turtle.Pen
+    pensize()
+    pencolor()
+*** TODO create a decorator which saves vector-based turtle paths (to complement Recorder)
+*** TODO once vector recorder exists, create a visitor which distorts a path (think contrails)
+
