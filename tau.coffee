@@ -85,7 +85,7 @@ extend Tau,
     touchmoveAdapter = (moveHandler) ->
       (touchevent) ->
         touchevent.preventDefault()
-        event = extend {}, touchevent.originalEvent.changedTouches[0], {view: event.view}
+        event = extend {}, touchevent.originalEvent.changedTouches[0], {view: touchevent.view}
         moveHandler(event)
       
     mousedownAdapter = (moveHandler) ->
