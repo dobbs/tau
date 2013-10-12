@@ -1,0 +1,32 @@
+{
+  "name": "tau",
+  "version": "0.1.0",
+  "description": "experiments in turtle geometry",
+  "scripts": {
+    "test": "node_modules/jasmine-node/bin/jasmine-node --coffee --verbose spec",
+    "build": "coffee -c tau.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dobbs/tau"
+  },
+  "keywords": [
+    "turtle geometery",
+    "turtle graphics",
+    "javascript",
+    "coffeescript",
+    "tau"
+  ],
+  "author": "Eric Dobbs",
+  "license": {
+    "type": "Apache-2.0",
+    "url": "http://www.apache.org/licenses/LICENSE-2.0"
+  },
+  "dependencies": {
+    "jquery": ""
+  },
+	"devDependencies": {
+    "coffee-script": "",
+		"jasmine-node": ""
+	}
+}
